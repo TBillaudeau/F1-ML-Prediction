@@ -25,7 +25,7 @@ update:
 	echo "All packages updated !"
 
 # Run all the tests
-run_test:
+tests:
 	$(PYTHON) -m pytest
 	echo "All tests passed !"
 
