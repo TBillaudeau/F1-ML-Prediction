@@ -7,3 +7,4 @@ pytest
 ergast-py
 ipykernel
 Pyarrow
+requests
