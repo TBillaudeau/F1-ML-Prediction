@@ -33,3 +33,8 @@ tests:
 clean:
 	rm -rf $(VENV_NAME)
 	echo "Environment cleaned ! (run 'deactivate' to exit)"
+
+
+# Run import_data.py file
+import_data:
+	$(PYTHON) src/import_data.py

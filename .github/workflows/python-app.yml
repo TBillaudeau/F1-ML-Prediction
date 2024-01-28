@@ -24,3 +24,6 @@ jobs:
   
     - name: Run tests
       run: make tests
+
+    - name: Run script
+      run: make import_data
