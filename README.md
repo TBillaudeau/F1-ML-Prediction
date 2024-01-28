@@ -4,6 +4,8 @@
 
 # Setup
 
+1. Setup environement
 `make setup`
 
-`source formulaOneEnv/bin/activate`
+2. Run tests
+
