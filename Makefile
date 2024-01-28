@@ -32,7 +32,7 @@ update:
 
 # Run all the tests
 tests:
-	python$(PYTHON_VERSION) -m pytest
+	$(PYTHON) -m pytest
 	echo "All tests passed !"
 
 # Clean the environment
@@ -42,4 +42,4 @@ clean:
 
 # Run import_data.py file
 import_data:
-	python$(PYTHON_VERSION) src/import_data.py
+	$(PYTHON) src/import_data.py
