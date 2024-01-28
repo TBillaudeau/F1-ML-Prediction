@@ -4,16 +4,15 @@ VENV_NAME=formulaOneEnv
 # Python version
 PYTHON_VERSION=3
 
-# Python path
-PYTHON=$(VENV_NAME)/bin/python$(PYTHON_VERSION)
-
 # Detect the operating system
 ifeq ($(OS),Windows_NT) 
 	activate_script := $(VENV_NAME)\Scripts\activate
 	remove_script := if exist $(VENV_NAME) rmdir /s /q $(VENV_NAME)
+	python := $(VENV_NAME)\Scripts\python$(PYTHON_VERSION)
 else
 	activate_script := . $(VENV_NAME)/bin/activate
 	remove_script := if [ -d "$(VENV_NAME)" ]; then rm -rf $(VENV_NAME); fi
+	python := $(VENV_NAME)/bin/python$(PYTHON_VERSION)
 endif
 
 # ------------------------------------------------------ #
@@ -34,7 +33,7 @@ update:
 
 # Run all the tests
 tests:
-	$(PYTHON) -m pytest
+	$(python) -m pytest
 	echo "All tests passed !"
 
 # Clean the environment
@@ -44,4 +43,4 @@ clean:
 
 # Run import_data.py file
 import_data:
-	$(PYTHON) src/import_data.py
+	$(python) src/import_data.py
