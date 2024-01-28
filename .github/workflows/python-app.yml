@@ -26,7 +26,7 @@ jobs:
       run: make tests
     
     - name: Update driver standings data
-      run: python src/import_data.py
+      run: make import_data
 
     - name: Commit and Push if it changed
       run: |

@@ -7,7 +7,6 @@ def mean(num_list):
     return sum(num_list) / len(num_list)
 
 
-
 def get_drivers_standings(year='current'):
     url = f'http://ergast.com/api/f1/{year}/driverStandings.json'
     response = requests.get(url)
