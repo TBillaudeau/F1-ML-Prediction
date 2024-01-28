@@ -1,12 +1,23 @@
 import unittest
-from src.import_data import mean
+import os
+import pandas as pd
+from src.import_data import get_drivers_standings
 
 class TestImportData(unittest.TestCase):
-    def test_mean(self):
-        self.assertEqual(mean([1, 2, 3, 4, 5]), 3)
-        self.assertEqual(mean([0, 0, 0, 0, 0]), 0)
-        self.assertEqual(mean([-1, 0, 1]), 0)
-        self.assertAlmostEqual(mean([1, 2.5, 3.5]), 2.3333333333333335)
+    def setUp(self):
+        self.year = 'current'
+        self.filepath = 'data/api_ergast/driver_standings.csv'
+
+    def test_get_drivers_standings(self):
+        # Run the function
+        get_drivers_standings(self.year)
+
+        # Check if the CSV file was created
+        self.assertTrue(os.path.exists(self.filepath))
+
+        # Check if the CSV file is not empty
+        df = pd.read_csv(self.filepath)
+        self.assertTrue(not df.empty)
 
 if __name__ == '__main__':
     unittest.main()
