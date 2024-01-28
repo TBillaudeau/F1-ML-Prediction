@@ -1,2 +1,4 @@
-# Python file to import the data from the API, clean it, and store in our DB
 
+# setup simple code to calculate the mean of a list
+def mean(num_list):
+    return sum(num_list) / len(num_list)
