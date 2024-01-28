@@ -4,3 +4,6 @@ scikit-learn
 matplotlib
 seaborn
 pytest
+ergast-py
+ipykernel
+Pyarrow
