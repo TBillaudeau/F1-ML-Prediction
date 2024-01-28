@@ -9,9 +9,11 @@ PYTHON=$(VENV_NAME)/bin/python$(PYTHON_VERSION)
 
 # Detect the operating system
 ifeq ($(OS),Windows_NT) 
-    activate_script := $(VENV_NAME)\Scripts\activate
+	activate_script := $(VENV_NAME)\Scripts\activate
+	remove_script := if exist $(VENV_NAME) rmdir /s /q $(VENV_NAME)
 else
-    activate_script := . $(VENV_NAME)/bin/activate
+	activate_script := . $(VENV_NAME)/bin/activate
+	remove_script := if [ -d "$(VENV_NAME)" ]; then rm -rf $(VENV_NAME); fi
 endif
 
 # ------------------------------------------------------ #
@@ -37,7 +39,7 @@ tests:
 
 # Clean the environment
 clean:
-	rm -rf $(VENV_NAME)
+	$(remove_script)
 	echo "Environment cleaned ! (run 'deactivate' to exit)"
 
 # Run import_data.py file
