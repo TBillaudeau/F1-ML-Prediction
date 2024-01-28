@@ -30,8 +30,8 @@ jobs:
 
     - name: Commit and Push if it changed
       run: |
-        git config --global user.email "github.action@github"
-        git config --global user.name "Github Action"
-        git add -A
-        git commit -m "Update driver standings data" -a || exit 0
-        git push
+        git config --local user.email "louis.arbey@efrei.net"
+        git config --local user.name "GitHub Action"
+        git add.
+        git diff-index --quiet HEAD || git commit -m "Update driver standings data"
+        git push origin master
