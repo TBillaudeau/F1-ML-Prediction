@@ -8,7 +8,7 @@ PYTHON_VERSION=3
 ifeq ($(OS),Windows_NT) 
 	activate_script := $(VENV_NAME)\Scripts\activate
 	remove_script := if exist $(VENV_NAME) rmdir /s /q $(VENV_NAME)
-	python := $(VENV_NAME)\Scripts\python$(PYTHON_VERSION)
+	python := $(VENV_NAME)\Scripts\python
 else
 	activate_script := . $(VENV_NAME)/bin/activate
 	remove_script := if [ -d "$(VENV_NAME)" ]; then rm -rf $(VENV_NAME); fi
