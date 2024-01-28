@@ -1,32 +1,38 @@
 # Name of the virtual environment
 VENV_NAME=formulaOneEnv
 
-# Command to create virtual environment
-VENV_COMMAND=python3 -m venv
-
 # Python version
 PYTHON_VERSION=3
 
-# Python version
+# Python path
 PYTHON=$(VENV_NAME)/bin/python$(PYTHON_VERSION)
+
+# Detect the operating system
+ifeq ($(OS),Windows_NT) 
+    activate_script := $(VENV_NAME)\Scripts\activate
+else
+    activate_script := $(VENV_NAME)/bin/activate
+endif
+
+# ------------------------------------------------------ #
 
 # Default target
 all: setup
 
 # Setup Python environment
 setup:
-	$(VENV_COMMAND) $(VENV_NAME)
-	. $(VENV_NAME)/bin/activate && pip install -r requirements.txt
-	echo "Python environment setup ! (run '. $(VENV_NAME)/bin/activate' to enter)"
+	python$(PYTHON_VERSION) -m venv $(VENV_NAME)
+	$(activate_script) && pip install -r requirements.txt
+	echo "Python environment setup ! (run '$(activate_script)' to enter)"
 
 # Update all packages in the environment
 update:
-	. $(VENV_NAME)/bin/activate && pip install --upgrade pip && pip install --upgrade -r requirements.txt
+	$(activate_script) && pip install --upgrade pip && pip install --upgrade -r requirements.txt
 	echo "All packages updated !"
 
 # Run all the tests
 tests:
-	$(PYTHON) -m pytest
+	python$(PYTHON_VERSION) -m pytest
 	echo "All tests passed !"
 
 # Clean the environment
@@ -36,4 +42,4 @@ clean:
 
 # Run import_data.py file
 import_data:
-	$(PYTHON) src/import_data.py
+	python$(PYTHON_VERSION) src/import_data.py
