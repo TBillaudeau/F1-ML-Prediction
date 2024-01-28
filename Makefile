@@ -11,7 +11,7 @@ PYTHON=$(VENV_NAME)/bin/python$(PYTHON_VERSION)
 ifeq ($(OS),Windows_NT) 
     activate_script := $(VENV_NAME)\Scripts\activate
 else
-    activate_script := $(VENV_NAME)/bin/activate
+    activate_script := . $(VENV_NAME)/bin/activate
 endif
 
 # ------------------------------------------------------ #
