@@ -1,0 +1,34 @@
+name: Weekly data fetch from API
+
+on:
+    schedule:
+      - cron: '0 8 * * 2'  # Every Tuesday at 08:00
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{secrets.GH_TOKEN}}
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: make setup
+  
+    - name: Import data and save it to the folder
+      run: make import_data
+
+    - name: Commit and Push if it changed
+      run: |
+        git config --global user.email "github.action@github"
+        git config --global user.name "Github Action"
+        git add -A
+        git commit -m "Updated data" -a || exit 0
+        git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master

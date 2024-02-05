@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import os
+from datetime import datetime
 
 def get_drivers_standings(year='current'):
     url = f'http://ergast.com/api/f1/{year}/driverStandings.json'
@@ -18,9 +19,22 @@ def get_drivers_standings(year='current'):
             standings_list.append([position, name, points])
         
         df = pd.DataFrame(standings_list, columns=['Position', 'Name', 'Points'])
-        print(df.head(2))
 
-        df.to_csv(f'data/api_ergast/driver_standings.csv', index=False)
+        print("\n--> Showing first rows of data ---------")
+        print(df.head(4))
+        print("---------------------------------------\n")
+
+        # Get current date and time
+        current_date = datetime.now().strftime('%Y-%m-%d_%Hh%M')
+
+        # Create new directory
+        new_dir = f'data/api_ergast/{current_date}'
+        os.makedirs(new_dir, exist_ok=True)
+
+        # Save the file in the new directory
+        df.to_csv(f'{new_dir}/driver_standings.csv', index=False)
+
+        print(f"\n--> File saved in {new_dir} directory")
     else:
         print("Failed to retrieve data")
 
