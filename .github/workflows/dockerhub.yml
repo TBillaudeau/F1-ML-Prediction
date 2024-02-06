@@ -8,8 +8,8 @@ on:
       - 'data/'
 
 jobs:
-  build_and_test:
-    name: Build Docker image and run tests
+  build_and_push:
+
     runs-on: ubuntu-latest
 
     steps:
