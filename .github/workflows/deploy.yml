@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'data/*'
+      - 'Models/*'
 
 jobs:
   build_and_push:
