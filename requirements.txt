@@ -9,3 +9,4 @@ ergast-py
 ipykernel
 Pyarrow
 streamlit
+joblib
