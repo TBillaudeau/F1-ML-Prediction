@@ -14,7 +14,7 @@ st.title("Formula 1 Grand Prix Insights")
 
 
 def import_all_data():
-    path = "../data/Formula 1 World Championship (1950 - 2023) Kaggle"
+    path = "data/Formula 1 World Championship (1950 - 2023) Kaggle"
 
     # ----- Load data from csv files -----
 
