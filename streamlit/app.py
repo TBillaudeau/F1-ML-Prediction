@@ -14,7 +14,7 @@ st.title("Formula 1 Grand Prix Insights")
 
 
 def import_all_data():
-    path = "../data/Formula 1 World Championship (1950 - 2023) Kaggle"
+    path = "data/Formula 1 World Championship (1950 - 2023) Kaggle"
 
     # ----- Load data from csv files -----
 
@@ -83,12 +83,5 @@ selected_season = st.sidebar.selectbox('Select a Season', unique_seasons)
 # Show a table of the list of all races for this season
 st.subheader("List of all races for this season")
 st.dataframe(df_races[df_races['year'] == selected_season])
-
-# Show the list of each grand prix and show the winner for each races
-st.subheader("List of each grand prix and show the winner for each races")
-st.dataframe(df_races[df_races['year'] == selected_season].groupby(['circuitId']).agg({'name':
-                                                                                       'first',
-                                                                                          'statusId':
-                                                                                          'max'}))
 
 

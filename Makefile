@@ -44,3 +44,7 @@ clean:
 # Run import_data.py file
 import_data:
 	$(python) src/import_data.py
+
+# Run train_and_save_model.py file
+train_and_save_model:
+	$(python) src/train_and_save_model.py
