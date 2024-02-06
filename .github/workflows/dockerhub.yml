@@ -1,0 +1,8 @@
+name: Push to dockerhub
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'data/'
