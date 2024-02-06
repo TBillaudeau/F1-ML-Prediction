@@ -1,0 +1,8 @@
+Model trained on 2024-02-06 11:17
+Decay rate: 0.9
+Model score: 0.3420399989843509
+Model parameters:
+copy_X: True
+fit_intercept: True
+n_jobs: None
+positive: False
