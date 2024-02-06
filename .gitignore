@@ -1,4 +1,4 @@
 formulaOneEnv
 .pytest_cache
 **/__pycache__
-git rm --cached .DS_Store
+.DS_Store
