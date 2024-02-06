@@ -84,11 +84,4 @@ selected_season = st.sidebar.selectbox('Select a Season', unique_seasons)
 st.subheader("List of all races for this season")
 st.dataframe(df_races[df_races['year'] == selected_season])
 
-# Show the list of each grand prix and show the winner for each races
-st.subheader("List of each grand prix and show the winner for each races")
-st.dataframe(df_races[df_races['year'] == selected_season].groupby(['circuitId']).agg({'name':
-                                                                                       'first',
-                                                                                          'statusId':
-                                                                                          'max'}))
-
 
