@@ -8,7 +8,7 @@ COPY data/ data/
 COPY Models/ Models/
 COPY streamlit/ streamlit/
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r streamlit/requirements.txt
 
 EXPOSE 8501
 
