@@ -31,10 +31,10 @@ update:
 	$(activate_script) && pip install --upgrade pip && pip install --upgrade -r requirements.txt
 	echo "All packages updated !"
 
-# Run all the tests
-tests:
-	$(python) -m pytest
-	echo "All tests passed !"
+# Run unit tests
+unit_tests:
+	$(python) -m unittest test/test_import_data.py
+	echo "Unit tests passed !"
 
 # Clean the environment
 clean:
@@ -52,4 +52,4 @@ train_and_save_model:
 # Run integration tests
 integration_tests:
 	$(python) -m unittest test/integration_test.py
-	echo "ifntegration test passed !"
+	echo "Integration test passed !"
