@@ -48,3 +48,8 @@ import_data:
 # Run train_and_save_model.py file
 train_and_save_model:
 	$(python) src/train_and_save_model.py
+
+# Run integration tests
+integration_tests:
+	$(python) -m unittest test/integration_test.py
+	echo "ifntegration test passed !"
