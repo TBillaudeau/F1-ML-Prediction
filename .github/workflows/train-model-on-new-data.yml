@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'data/api_ergast/*'
+  workflow_dispatch:  # Allows manual triggering to test the workflow
 
 jobs:
   build:

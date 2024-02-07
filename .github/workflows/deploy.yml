@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'Models/*'
+  workflow_dispatch:  # Allows manual triggering to test the workflow
 
 jobs:
   build_and_push:

@@ -6,8 +6,29 @@ on:
     workflow_dispatch:
 
 jobs:
-  get-new-data:
+  run-tests:
 
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{secrets.GH_TOKEN}}
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: make setup
+  
+    - name: Run tests
+      run: make tests
+
+  get-new-data:
+    needs: run-tests
+    
     runs-on: ubuntu-latest
 
     steps:
@@ -62,7 +83,8 @@ jobs:
             git config --global user.name "Github Action"
             git add -A
             git commit -m "Model trained and saved" -a || exit 0
-            git pull --rebase https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+            git fetch origin master
+            git rebase origin/master
             git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
     
   deploy-to-northflank:
