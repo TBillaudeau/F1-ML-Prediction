@@ -53,3 +53,7 @@ train_and_save_model:
 integration_tests:
 	$(python) -m unittest test/integration_test.py
 	echo "Integration test passed !"
+
+tests:
+	$(python) -m pytest
+	echo "All tests passed !"
