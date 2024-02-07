@@ -25,6 +25,7 @@ class TestImportDataFunctions(unittest.TestCase):
             "MRData": {
                 "RaceTable": {
                     "Races": [{"raceName": "Example Race"}]
+
                 }
             }
         }
@@ -58,6 +59,7 @@ class TestImportDataFunctions(unittest.TestCase):
         mock_read_csv.assert_any_call("data/api_ergast/dir2/races.csv")
         mock_read_csv.assert_any_call("data/api_ergast/dir2/drivers.csv")
         mock_read_csv.assert_any_call("data/api_ergast/dir2/constructors.csv")
+
 
 if __name__ == '__main__':
     unittest.main()
