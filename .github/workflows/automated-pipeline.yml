@@ -1,0 +1,106 @@
+name: Automated pipeline
+
+on:
+    schedule:
+      - cron: '0 8 * * 2'  # Every Tuesday at 08:00
+    workflow_dispatch:
+
+jobs:
+  get-new-data:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{secrets.GH_TOKEN}}
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: make setup
+  
+    - name: Import data and save it to the folder
+      run: make import_data
+
+    - name: Commit and Push if it changed
+      run: |
+        git config --global user.email "github.action@github"
+        git config --global user.name "Github Action"
+        git add -A
+        git commit -m "Updated data" -a || exit 0
+        git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+
+    - name: Check for changes and fail if none
+      run: |
+        if git diff --quiet HEAD^ HEAD; then
+        echo "::error::No changes detected, stopping workflow"
+        exit 1
+        fi
+
+  train-model:
+    needs: get-new-data
+
+    runs-on: ubuntu-latest
+
+    steps:
+        - uses: actions/checkout@v2
+          with:
+            token: ${{secrets.GH_TOKEN}}
+    
+        - name: Set up Python 3.9
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.9
+    
+        - name: Install dependencies
+          run: make setup
+      
+        - name: Train and save model
+          run: make train_and_save_model
+    
+        - name: Commit and Push if it changed
+          run: |
+            git config --global user.email "github.action@github"
+            git config --global user.name "Github Action"
+            git add -A
+            git commit -m "Model trained and saved" -a || exit 0
+            git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+    
+  deploy-to-northflank:
+    needs: train-model
+
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Check out the repo
+          uses: actions/checkout@v4
+  
+        - name: Log in to Docker Hub
+          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+  
+        - name: Extract metadata (tags, labels) for Docker
+          id: meta
+          uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+          with:
+            images: ${{ secrets.DOCKERHUB_USERNAME }}/F1-ML-Prediction       
+  
+        - name: Build Docker image
+          run: docker build . --file Dockerfile --tag ${{ steps.meta.outputs.tags }}
+  
+        - name: Push Docker image
+          run: docker push ${{ steps.meta.outputs.tags }}
+  
+        - name: Deploy to Northflank
+          uses: northflank/deploy-to-northflank@v1
+          with:
+            northflank-api-key: ${{ secrets.NORTHFLANK_API_KEY }}
+            project-id: ${{ secrets.PROJECT_ID }}
+            service-id: ${{ secrets.SERVICE_ID }}
+            image-path: ${{ steps.meta.outputs.tags }}
