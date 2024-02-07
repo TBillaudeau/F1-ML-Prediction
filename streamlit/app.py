@@ -22,8 +22,7 @@ def get_most_recent_dir():
 
 def load_model():
     path = get_most_recent_dir()
-    print(path)
-    model_path = f"{path}/random_forest_regressor_model.joblib"
+    model_path = f"{path}/random_forest_regressor_model.pkl"
     if os.path.exists(model_path):
         model = joblib.load(model_path)
         return model
