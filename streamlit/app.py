@@ -1,6 +1,9 @@
 import streamlit as st
 import joblib
 import os
+import glob
+import pandas as pd
+
 
 # Add a banner at the top 
 st.image("https://static.tickets-platform.com/img/pages/39/2131/255/media/1/desktop/image_group-4.jpg?ts=1567173131")
@@ -11,33 +14,49 @@ st.sidebar.image("https://1000logos.net/wp-content/uploads/2021/06/F1-logo.png")
 # Title of the web app
 st.title("Formula 1 Grand Prix Insights")
 
-# Load the ML model
-def load_model(model_name):
-    # Modify the path to where your model is saved
-    model_path = f"Models/{model_name}/model.pkl"
+def get_most_recent_dir():
+    path_pattern = os.path.join("Models", "*")
+    directories = glob.glob(path_pattern)
+    most_recent_dir = max(directories, key=os.path.getmtime)
+    return most_recent_dir 
+
+def load_model():
+    path = get_most_recent_dir()
+    print(path)
+    model_path = f"{path}/random_forest_regressor_model.joblib"
     if os.path.exists(model_path):
         model = joblib.load(model_path)
         return model
     else:
         return None
 
-# Model selector
-model_names = os.listdir("Models")
-selected_model = st.sidebar.selectbox("Select a model", model_names)
+model = load_model()
 
-model = load_model(selected_model)
+# Add form elements to get user input
+grid = st.sidebar.number_input('Grid position', min_value=1, max_value=20, value=1)
+constructorId = st.sidebar.number_input('Constructor ID', min_value=1, max_value=100, value=1)
+driverId = st.sidebar.number_input('Driver ID', min_value=1, max_value=1000, value=1)
+circuitId = st.sidebar.number_input('Circuit ID', min_value=1, max_value=100, value=1)
 
-# Check if the model was loaded
-if model is not None:
+# Example new data for prediction
+# Suppose you want to predict the finishing position for a driver starting from grid position 5 for constructor ID 1
+new_data = {
+    'grid': [grid],  # Grid position
+    'constructorId': [constructorId],  # Constructor ID
+    'driverId': [driverId],  # Driver ID
+    'circuitId': [circuitId]
+}
+st.markdown("### For example try with: ")
+st.markdown("* Grid position: 1")
+st.markdown("* Constructor ID: 9")
+st.markdown("* Driver ID: 830")
+st.markdown("* Circuit ID: 6")
 
-    # User input
-    st.write("Enter the weighted position from the last races:")
-    weighted_position = st.number_input('Weighted Position', value=0.0, format="%.2f")
+# Convert the new data to a DataFrame
+new_data_df = pd.DataFrame(new_data)
 
-    # Predict button
-    if st.button('Predict Next Race Position'):
-        # Ensure the input is in the expected format
-        prediction = model.predict([[weighted_position]])
-        st.write(f'Predicted Position Order in Next Race: {prediction[0]:.0f}')
-else:
-    st.write("Error: Model not found. Please check the model path.")
+# Use the model to make predictions
+predictions = model.predict(new_data_df)
+
+# Print the predicted finishing position
+st.write(f"Predicted Finishing Position: {predictions[0]}")
