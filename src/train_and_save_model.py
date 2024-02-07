@@ -21,9 +21,9 @@ def load_datasets(folder_path):
     return races_df, results_df
 
 def preprocess_and_select_features(races_df, results_df):
-    df = pd.merge(races_df[['raceId']], results_df[['raceId', 'driverId', 'constructorId', 'grid', 'positionOrder']], on='raceId')
+    df = pd.merge(races_df[['raceId','circuitId']], results_df[['raceId', 'driverId', 'constructorId', 'grid', 'positionOrder']], on='raceId')
     df = df.dropna()
-    X = df[['grid', 'constructorId', 'driverId']]
+    X = df[['grid', 'constructorId', 'driverId','circuitId']]
     y = df['positionOrder']
     return X, y
 
