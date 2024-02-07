@@ -7,8 +7,6 @@ on:
 
 jobs:
   get-new-data:
-    outputs:
-      data_changed: ${{ steps.check_changes.outputs.data_changed }}  # Output variable
 
     runs-on: ubuntu-latest
 
@@ -28,24 +26,17 @@ jobs:
     - name: Import data and save it to the folder
       run: make import_data
 
-    - name: Check for changed files
-      id: check_changes
-      run: |
-        git diff --quiet || echo "##[set-output name=data_changed;]true"
-        git diff --quiet && echo "##[set-output name=data_changed;]false"
-
     - name: Commit and Push if it changed
-      if: steps.check_changes.outputs.data_changed == 'true'  # Only run this step if data has changed
       run: |
         git config --global user.email "github.action@github"
         git config --global user.name "Github Action"
         git add -A
-        git commit -m "Updated data" -a
+        git commit -m "Updated data" -a || exit 0
         git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+
 
   train-model:
     needs: get-new-data
-    if: needs.get-new-data.outputs.data_changed == 'true'  # Only run this job if data has changed
 
     runs-on: ubuntu-latest
 
