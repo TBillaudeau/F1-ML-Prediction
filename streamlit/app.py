@@ -3,8 +3,6 @@ import pandas as pd
 import joblib
 import glob
 import os
-import glob
-import pandas as pd
 
 # Set up the page
 def setup_page():
@@ -44,8 +42,7 @@ def load_model(model_name):
 def sidebar():
     st.sidebar.image("https://1000logos.net/wp-content/uploads/2021/06/F1-logo.png")
     model_names = os.listdir("Models")
-    selected_model = st.sidebar.selectbox("Select a model", model_names)
-    st.toast(f"Model in use ・ *{selected_model}*")
+    selected_model = st.sidebar.selectbox("Select a model", model_names, index=0)
     return selected_model
 
 # Load data
@@ -77,8 +74,7 @@ def predict_position(model, grid_position, constructorId, driverId, circuitId):
             'circuitId': [circuitId]
         })
         predictions = model.predict(new_data_df)
-        st.write(f"Predicted Finishing Position: {predictions[0]}")
-        st.metric(label="Predicted Position", value=predictions[0])
+        st.metric(label="", value=predictions[0])
     else:
         st.error("Model not loaded. Please check the model path and try again.")
 
@@ -87,15 +83,20 @@ def main():
     setup_page()
     constructor_data, driver_data, race_data = load_data()
     selected_model = sidebar()
-    print(selected_model)
-
-    st.subheader("User Input")
-    selected_constructor_name, selected_driver_name, selected_race_name, grid_position, constructor_dict, driver_dict, race_dict = get_user_data(constructor_data, driver_data, race_data)
-    model = load_model(selected_model)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("User Input")
+        selected_constructor_name, selected_driver_name, selected_race_name, grid_position, constructor_dict, driver_dict, race_dict = get_user_data(constructor_data, driver_data, race_data)
+        model = load_model(selected_model)
     if st.button('Predict Finishing Position 🚀'):
-        st.markdown("---")
-        st.subheader("Prediction")
-        predict_position(model, grid_position, constructor_dict[selected_constructor_name], driver_dict[selected_driver_name], race_dict[selected_race_name])
-
+        with col2:
+            st.subheader("Position")
+            col1, col2, col3 = st.columns(3)
+            with col2:
+                predict_position(model, grid_position, constructor_dict[selected_constructor_name], driver_dict[selected_driver_name], race_dict[selected_race_name])
+            with col3:
+                st.write("e")
+                
 if __name__ == "__main__":
     main()
