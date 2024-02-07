@@ -28,9 +28,6 @@ jobs:
   
     - name: Run tests
       run: make tests
-    
-    - name: Update driver standings data
-      run: make import_data
 
     - name: Commit and Push if it changed
       run: |
