@@ -34,12 +34,6 @@ jobs:
         git commit -m "Updated data" -a || exit 0
         git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
 
-    - name: Check for changes and fail if none
-      run: |
-        if git diff --quiet HEAD^ HEAD; then
-        echo "::error::No changes detected, stopping workflow"
-        exit 1
-        fi
 
   train-model:
     needs: get-new-data
@@ -68,6 +62,7 @@ jobs:
             git config --global user.name "Github Action"
             git add -A
             git commit -m "Model trained and saved" -a || exit 0
+            git pull --rebase https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
             git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
     
   deploy-to-northflank:
