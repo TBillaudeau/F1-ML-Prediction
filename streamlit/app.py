@@ -15,19 +15,21 @@ st.sidebar.image("https://1000logos.net/wp-content/uploads/2021/06/F1-logo.png")
 st.title("Formula 1 Grand Prix Insights")
 
 def get_most_recent_dir():
-    path_pattern = os.path.join("Models", "*")
+    path_pattern = os.path.join("../Models", "*")
     directories = glob.glob(path_pattern)
     most_recent_dir = max(directories, key=os.path.getmtime)
     return most_recent_dir 
 
 def load_model():
     path = get_most_recent_dir()
-    print(path)
-    model_path = f"{path}/random_forest_regressor_model.joblib"
+    model_path = f"{path}/random_forest_regressor_model.pkl"
+    print("Model path: ", model_path)
+    print("File exists: ", os.path.exists(model_path))
     if os.path.exists(model_path):
         model = joblib.load(model_path)
         return model
     else:
+        st.error("Model file does not exist: " + model_path)
         return None
 
 model = load_model()
