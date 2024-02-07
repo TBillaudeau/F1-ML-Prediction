@@ -32,7 +32,7 @@ def get_most_recent_dir(path):
 
 # Model selection
 def load_model(model_name):
-    model_path = f"Models/{model_name}/random_forest_regressor_model.pkl"
+    model_path = f"../Models/{model_name}/random_forest_regressor_model.pkl"
     if os.path.exists(model_path):
         return joblib.load(model_path)
     else:
@@ -41,15 +41,15 @@ def load_model(model_name):
 # Sidebar
 def sidebar():
     st.sidebar.image("https://1000logos.net/wp-content/uploads/2021/06/F1-logo.png")
-    model_names = os.listdir("Models")
+    model_names = os.listdir("../Models")
     selected_model = st.sidebar.selectbox("Select a model", model_names, index=0)
     return selected_model
 
 # Load data
 def load_data():
-    constructor_data = pd.read_csv(get_most_recent_dir("data/api_ergast/*") + '/constructors.csv')
-    driver_data = pd.read_csv(get_most_recent_dir("data/api_ergast/*") + '/drivers.csv')
-    race_data = pd.read_csv(get_most_recent_dir("data/api_ergast/*") + '/races.csv')
+    constructor_data = pd.read_csv(get_most_recent_dir("../data/api_ergast/*") + '/constructors.csv')
+    driver_data = pd.read_csv(get_most_recent_dir("../data/api_ergast/*") + '/drivers.csv')
+    race_data = pd.read_csv(get_most_recent_dir("../data/api_ergast/*") + '/races.csv')
     return constructor_data, driver_data, race_data
 
 # User input
