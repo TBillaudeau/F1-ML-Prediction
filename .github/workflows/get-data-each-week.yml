@@ -1,8 +1,9 @@
 name: Weekly data fetch from API
 
 on:
-    schedule:
-      - cron: '0 8 * * 2'  # Every Tuesday at 08:00
+  schedule:
+    - cron: '0 8 * * 2'  # Every Tuesday at 08:00
+  workflow_dispatch:  # Allows manual triggering to test the workflow
 
 jobs:
   build:
