@@ -7,6 +7,7 @@ import joblib
 import os
 import glob
 import datetime
+import pickle
 
 def get_most_recent_dir():
     path_pattern = os.path.join("data/api_ergast", "*")
@@ -43,8 +44,10 @@ def evaluate_model(model, X_test, y_test):
     print(f"RMSE: {rmse}")
     print(f"Accuracy: {model.score(X_test, y_test)}")
 
-def save_model(model, filename):
-    joblib.dump(model, filename)
+def save_model(model, filenameJobLib, filenamePickle):
+    joblib.dump(model, filenameJobLib)
+    with open(filenamePickle, 'wb') as file:  # Use 'wb' to write in binary mode
+        pickle.dump(model, file)
 
 def write_performance_to_file(model, X_test, y_test, X_train, filename):
     predictions = model.predict(X_test)
@@ -70,7 +73,7 @@ def main():
     current_date = datetime.datetime.now().strftime('%Y-%m-%d_%Hh%M')
     new_dir = f'Models/{current_date}'
     os.makedirs(new_dir, exist_ok=True)
-    save_model(model, f'{new_dir}/random_forest_regressor_model.joblib')
+    save_model(model, f'{new_dir}/random_forest_regressor_model.joblib', f'{new_dir}/random_forest_regressor_model.pkl')
 
     # Write performance metrics to a text file
     write_performance_to_file(model, X_test, y_test, X_train, f'{new_dir}/model_performance.txt')
