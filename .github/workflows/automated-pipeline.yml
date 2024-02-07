@@ -6,8 +6,29 @@ on:
     workflow_dispatch:
 
 jobs:
-  get-new-data:
+  run-tests:
 
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{secrets.GH_TOKEN}}
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: make setup
+  
+    - name: Run tests
+      run: make tests
+
+  get-new-data:
+    needs: run-tests
+    
     runs-on: ubuntu-latest
 
     steps:
