@@ -16,7 +16,8 @@ def import_files(most_recent_dir):
     last_results = pd.read_csv(os.path.join(most_recent_dir + "/results.csv"))
     last_races = pd.read_csv(os.path.join(most_recent_dir + "/races.csv"))
     last_drivers = pd.read_csv(os.path.join(most_recent_dir + "/drivers.csv"))
-    return last_results, last_races, last_drivers
+    last_constructors = pd.read_csv(os.path.join(most_recent_dir + '/constructors.csv'))
+    return last_results, last_races, last_drivers, last_constructors
 
 def get_api_data():
     url = 'http://ergast.com/api/f1/current/last/results.json'
@@ -38,7 +39,7 @@ def check_new_data(results, raceName, last_results, last_races):
     print("New data available.")
     return True
 
-def save_new_data(results, raceName, last_results, last_races,last_drivers):
+def save_new_data(results, raceName, last_results, last_races,last_drivers,last_constructors):
     last_resultId = last_results.iloc[-1]['resultId']
     last_resultId += 1
     raceId = last_races[last_races['name'] == raceName].iloc[-1]['raceId']
@@ -69,7 +70,14 @@ def save_new_data(results, raceName, last_results, last_races,last_drivers):
             else:
                 print(f"No driver found with code {code} and number {permanentNumber}, setting to 0")
                 driverId = 0
-                continue
+            
+            # Get constructor id from last_constructors and match constructorId with constructorRef
+            constructor_df = last_constructors[last_constructors['constructorRef'] == constructorId]
+            if not constructor_df.empty:
+                constructorId = constructor_df.iloc[0]['constructorId']
+            else:
+                print(f"No constructor found with constructorId {constructorId}, setting to 0")
+                constructorId = 0
 
             data.append({
                 'resultId': last_resultId,
@@ -103,13 +111,14 @@ def save_new_data(results, raceName, last_results, last_races,last_drivers):
     print(f"\n--> Results saved in {new_dir} directory")
     last_races.to_csv(f'{new_dir}/races.csv', index=False)
     last_drivers.to_csv(f'{new_dir}/drivers.csv', index=False)
+    last_constructors.to_csv(f'{new_dir}/constructors.csv', index=False)
 
 def main():
     most_recent_dir = get_most_recent_dir()
-    last_results, last_races,last_drivers = import_files(most_recent_dir)
+    last_results, last_races,last_drivers,last_constructors = import_files(most_recent_dir)
     results, raceName = get_api_data()
     if check_new_data(results, raceName, last_results, last_races):
-        save_new_data(results, raceName, last_results, last_races,last_drivers)
+        save_new_data(results, raceName, last_results, last_races,last_drivers,last_constructors)
 
 if __name__ == '__main__':
     main()
