@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'Models/*'
+      - 'data/api_ergast/*'
 
 jobs:
   build:
