@@ -62,7 +62,8 @@ jobs:
             git config --global user.name "Github Action"
             git add -A
             git commit -m "Model trained and saved" -a || exit 0
-            git pull --rebase https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+            git fetch origin master
+            git rebase origin/master
             git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
     
   deploy-to-northflank:
