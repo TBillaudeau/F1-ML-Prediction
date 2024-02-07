@@ -1,93 +1,79 @@
 import pandas as pd
-import os
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 import numpy as np
 import joblib
-from datetime import datetime
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+import os
+import glob
+import datetime
 
-path = "data/Formula 1 World Championship (1950 - 2023) Kaggle"
+def get_most_recent_dir():
+    path_pattern = os.path.join("data/api_ergast", "*")
+    directories = glob.glob(path_pattern)
+    most_recent_dir = max(directories, key=os.path.getmtime)
+    print("Checking latest data from: ",most_recent_dir)
+    return most_recent_dir
 
-print("Loading data from csv files...")
-df_races = pd.read_csv(path + "/races.csv")
-df_results = pd.read_csv(path + "/results.csv")
+def load_datasets(folder_path):
+    races_df = pd.read_csv(f'{folder_path}/races.csv')
+    results_df = pd.read_csv(f'{folder_path}/results.csv')
+    return races_df, results_df
 
-# Minimum year for the data
-min_year = 2022
+def preprocess_and_select_features(races_df, results_df):
+    df = pd.merge(races_df[['raceId']], results_df[['raceId', 'driverId', 'constructorId', 'grid', 'positionOrder']], on='raceId')
+    df = df.dropna()
+    X = df[['grid', 'constructorId', 'driverId']]
+    y = df['positionOrder']
+    return X, y
 
-# Filtering dataframes
-df_races = df_races[df_races['year'] >= min_year]
-df_results = df_results[df_results['raceId'].isin(df_races['raceId'])]
+def split_data(X, y):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    return X_train, X_test, y_train, y_test
 
+def train_model(X_train, y_train):
+    model = RandomForestRegressor(n_estimators=100, max_depth=10, random_state=42)
+    model.fit(X_train, y_train)
+    return model
 
-print("---- MODEL TRAINING ----")
+def evaluate_model(model, X_test, y_test):
+    predictions = model.predict(X_test)
+    mse = mean_squared_error(y_test, predictions)
+    rmse = np.sqrt(mse)
+    print(f"RMSE: {rmse}")
+    print(f"Accuracy: {model.score(X_test, y_test)}")
 
-# Sort the results to ensure chronological order
-df_results_sorted = df_results.sort_values(by=['driverId', 'raceId'])
+def save_model(model, filename):
+    joblib.dump(model, filename)
 
-# Number of recent races to consider for the decay rate
-X = 3  
-# Decay rate to apply to each previous race
-decay_rate = 0.9  
+def write_performance_to_file(model, X_test, y_test, X_train, filename):
+    predictions = model.predict(X_test)
+    mse = mean_squared_error(y_test, predictions)
+    rmse = np.sqrt(mse)
+    accuracy = model.score(X_test, y_test)
+    data_quantity = len(X_train) + len(X_test)
 
-# Prepare the dataset
-def prepare_dataset(df, X, decay_rate):
-    weighted_positions = []
+    with open(filename, 'w') as f:
+        f.write(f"RMSE: {rmse}\n")
+        f.write(f"Accuracy: {accuracy}\n")
+        f.write(f"Quantity of data: {data_quantity}\n")
 
-    # Iterate over each row in the dataframe
-    for index, row in df.iterrows():
-        driver_id = row['driverId']
-        race_id = row['raceId']
+def main():
+    most_recent_dir = get_most_recent_dir()
+    races_df, results_df = load_datasets(most_recent_dir)
+    X, y = preprocess_and_select_features(races_df, results_df)
+    X_train, X_test, y_train, y_test = split_data(X, y)
+    model = train_model(X_train, y_train)
+    evaluate_model(model, X_test, y_test)
 
-        # Get the last X races for the driver before the current race
-        previous_races = df[(df['driverId'] == driver_id) & (df['raceId'] < race_id)].tail(X)
+    # Save model to new folder in Models
+    current_date = datetime.datetime.now().strftime('%Y-%m-%d_%Hh%M')
+    new_dir = f'Models/{current_date}'
+    os.makedirs(new_dir, exist_ok=True)
+    save_model(model, f'{new_dir}/random_forest_regressor_model.joblib')
 
-        # Apply decay to each position
-        weights = [decay_rate ** i for i in range(len(previous_races))]
-        weighted_position = np.average(previous_races['positionOrder'], weights=weights) if not previous_races.empty else np.nan
+    # Write performance metrics to a text file
+    write_performance_to_file(model, X_test, y_test, X_train, f'{new_dir}/model_performance.txt')
 
-        weighted_positions.append(weighted_position)
-
-    df['weighted_position'] = weighted_positions
-    return df
-
-# Apply the function to prepare the dataset
-df_prepared = prepare_dataset(df_results_sorted, X, decay_rate)
-
-# Drop rows with NaN values
-df_prepared = df_prepared.dropna()
-
-# The feature is the weighted_position, and the label is the actual positionOrder of the next race
-features = df_prepared[['weighted_position']]
-labels = df_prepared['positionOrder']
-
-# Train test split
-X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
-
-# Train the model
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-# Create a new folder to save the model and the informations
-# Get current date and time
-now = datetime.now()
-
-# Format as a string
-folder_name = now.strftime("%Y-%m-%d_%Hh%M")
-
-# Create the folder
-os.makedirs(f"Models/{folder_name}", exist_ok=True)
-
-# Evaluate the model and save the informations as a txt file
-score = model.score(X_test, y_test)
-with open(f"Models/{folder_name}/model_infos.txt", "w") as file:
-    file.write(f"------ Model trained : {now.strftime('%Y-%m-%d %H:%M')} ------\n")
-    file.write(f"- Decay rate: {decay_rate}\n")
-    file.write(f"- X races: {X}\n")
-    file.write(f"Model score: {score}\n")
-    file.write("----------------------------------------------\n")
-
-# Save the model
-joblib.dump(model, f"Models/{folder_name}/model.pkl")
-
-print("Model trained and saved successfully!")
+if __name__ == '__main__':
+    main()
