@@ -47,9 +47,9 @@ def sidebar():
 
 # Load data
 def load_data():
-    constructor_data = pd.read_csv(get_most_recent_dir("Data/api_ergast/*") + '/constructors.csv')
-    driver_data = pd.read_csv(get_most_recent_dir("Data/api_ergast/*") + '/drivers.csv')
-    race_data = pd.read_csv(get_most_recent_dir("Data/api_ergast/*") + '/races.csv')
+    constructor_data = pd.read_csv(get_most_recent_dir("data/api_ergast/*") + '/constructors.csv')
+    driver_data = pd.read_csv(get_most_recent_dir("data/api_ergast/*") + '/drivers.csv')
+    race_data = pd.read_csv(get_most_recent_dir("data/api_ergast/*") + '/races.csv')
     return constructor_data, driver_data, race_data
 
 # User input
