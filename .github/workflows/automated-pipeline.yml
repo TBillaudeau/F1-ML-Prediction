@@ -55,7 +55,6 @@ jobs:
         git commit -m "Updated data" -a || exit 0
         git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:master
 
-
   train-model:
     needs: get-new-data
 
@@ -109,7 +108,7 @@ jobs:
             images: ${{ secrets.DOCKERHUB_USERNAME }}/F1-ML-Prediction       
   
         - name: Build Docker image
-          run: docker build . --file Dockerfile --tag ${{ steps.meta.outputs.tags }}
+          run: docker build . --file Dockerfile --no-cache --tag ${{ steps.meta.outputs.tags }}
   
         - name: Push Docker image
           run: docker push ${{ steps.meta.outputs.tags }}
