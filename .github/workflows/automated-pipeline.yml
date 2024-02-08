@@ -2,7 +2,9 @@ name: Automated pipeline
 
 on:
     schedule:
-      - cron: '0 8 * * 2'  # Every Tuesday at 08:00
+      # - cron: '0 8 * * 2'  # Every Tuesday at 08:00
+      - cron: '15 9 * * 4'
+      - cron: '15 8 * * 4'
     workflow_dispatch:
 
 jobs:
