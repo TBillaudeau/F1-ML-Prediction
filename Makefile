@@ -54,6 +54,11 @@ integration_tests:
 	$(python) -m unittest test/integration_test.py
 	echo "Integration test passed !"
 
+# Run application tests
+application_tests:
+	$(python) -m unittest test/test_app.py
+	echo "Application test passed !"
+
 # Run all tests
 tests:
 	$(python) -m pytest
