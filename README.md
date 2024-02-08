@@ -111,39 +111,4 @@ SERVICE_ID
 ```
 
 ---
-
-### MVP (Minimum Viable Product)
-
-**Project Initialization:**
-- ✅ **Idea Generation:** Choose a hobby or personal interest and explore how AI and ML can be applied to enhance or transform this area.
-
-**Project Management:**
-- ✅ **Project Plan:** Draft a simplified project plan highlighting key milestones and objectives. Focus on the overarching goals, considering the project's limited timeframe.
-
-**Development Requirements:**
-- ✅ **Code Reproducibility:** Ensure that the code is reproducible across various environments.
-- ✅ **Testing:** Conduct comprehensive testing for code reliability.
-- ✅ **Automated Testing:** Incorporate automated testing into the development workflow.
-
-**MLOps Foundations:**
-- ✅ **Data Versioning and Model Tracking:** Utilize tools for data versioning and model tracking to manage the machine learning model lifecycle effectively.
-- ✅ **Data & Training Pipelines:** Develop pipelines for data handling and model training to streamline processes.
-
-**Automation and CI/CD:**
-- ✅ **CI/CD Pipelines:** Implement Continuous Integration and Continuous Deployment pipelines to automate the development process.
-- ✅ **ML Model Integration and Deployment Automation:** Automate the integration and deployment of the ML model to facilitate smooth transitions from development to production.
-
-**Global Requirements:**
-- ✅ **Scalability and Growth:** Design the project with scalability in mind to accommodate future growth.
-- ✅ **Automation:** Leverage automation wherever possible to enhance efficiency and reliability.
-
-### Bonus Challenges
-
-**Advanced Features and Optimizations:**
-- 🟧 **Monitoring:** Set up tools for monitoring and observability to track application performance and detect data drift. Adjust to new data inputs as necessary.
-- 🟧 **Continuous Training:** Implement a mechanism for continuous model learning to keep the ML model updated with new data.
-- ✅ **Cloud Deployment:** Deploy the application on a cloud platform to improve accessibility and scalability.
-
-
----
 > A project made with a lot of ❤️ by **ARBEY** Louis, **BILLAUDEAU** Thomas and **CRETINON** Pierre-Louis
