@@ -59,6 +59,12 @@ test_app:
 	$(python) test/test_app.py
 	echo "App tests passed !"
 
+# Run end to end tests
+endtoend_test_app:
+	$(python) -m unittest test/endtoend_test.py
+	echo "End to end tests passed !"
+
+
 # Run all tests
 tests:
 	$(python) -m pytest
