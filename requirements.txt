@@ -10,3 +10,4 @@ ipykernel
 Pyarrow
 streamlit
 joblib
+selenium
