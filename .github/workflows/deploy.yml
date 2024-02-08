@@ -1,12 +1,7 @@
-name: Deploy pipeline
+name: Build Docker image and deploy to Northflank
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'Models/*'
-  workflow_dispatch:  # Allows manual triggering to test the workflow
+  workflow_dispatch:
 
 jobs:
   build_and_push:
@@ -30,7 +25,7 @@ jobs:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/F1-ML-Prediction       
 
       - name: Build Docker image
-        run: docker build . --file Dockerfile --tag ${{ steps.meta.outputs.tags }}
+        run: docker build . --file Dockerfile --no-cache --tag ${{ steps.meta.outputs.tags }}
 
       - name: Push Docker image
         run: docker push ${{ steps.meta.outputs.tags }}
