@@ -13,7 +13,7 @@ def test_main():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=options)
 
     # Go to your app's URL
     driver.get("https://efrei--streamlit--4f4tjmnqvxl8.code.run/")  # replace with your app's URL
