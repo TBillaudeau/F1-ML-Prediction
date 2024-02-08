@@ -5,7 +5,7 @@ import glob
 import os
 
 global pre_path
-pre_path = "../"
+pre_path = ""
 
 # Set up the page
 def setup_page():
