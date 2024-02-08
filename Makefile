@@ -58,3 +58,11 @@ integration_tests:
 tests:
 	$(python) -m pytest
 	echo "All tests passed !"
+
+# Build Docker image
+build_docker:
+	docker build -t f1-ml-prediction .
+
+# Run Streamlit app
+run_streamlit:
+	$(python) -m streamlit run streamlit/app.py
