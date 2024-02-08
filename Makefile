@@ -31,11 +31,6 @@ update:
 	$(activate_script) && pip install --upgrade pip && pip install --upgrade -r requirements.txt
 	echo "All packages updated !"
 
-# Run unit tests
-unit_tests:
-	$(python) -m unittest test/test_import_data.py
-	echo "Unit tests passed !"
-
 # Clean the environment
 clean:
 	$(remove_script)
@@ -49,10 +44,26 @@ import_data:
 train_and_save_model:
 	$(python) src/train_and_save_model.py
 
+# Run unit tests
+unit_tests:
+	$(python) -m unittest test/test_import_data.py
+	echo "Unit tests passed !"
+
 # Run integration tests
 integration_tests:
 	$(python) -m unittest test/integration_test.py
 	echo "Integration test passed !"
+
+# Run app tests
+test_app:
+	$(python) test/test_app.py
+	echo "App tests passed !"
+
+# Run end to end tests
+endtoend_test_app:
+	$(python) -m unittest test/endtoend_test.py
+	echo "End to end tests passed !"
+
 
 # Run all tests
 tests:

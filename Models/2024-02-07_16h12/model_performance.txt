@@ -1,3 +1,0 @@
-RMSE: 4.785207428566574
-Accuracy: 0.3364298124528241
-Quantity of data: 4147

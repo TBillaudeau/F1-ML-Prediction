@@ -24,6 +24,9 @@ jobs:
       with:
         python-version: 3.9
 
+    - name: Setup Firefox Driver
+      uses: browser-actions/setup-firefox@latest
+
     - name: Install dependencies
       run: make setup
   
