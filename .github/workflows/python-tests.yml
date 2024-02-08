@@ -24,6 +24,9 @@ jobs:
       with:
         python-version: 3.9
 
+    - name: Setup Chrome Driver
+      uses: browser-actions/setup-chrome@latest
+
     - name: Install dependencies
       run: make setup
   
